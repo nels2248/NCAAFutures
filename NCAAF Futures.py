@@ -23,6 +23,15 @@ df['Color'] = df['Color'].str.strip().str.upper()
 # Group the data by team
 teams = df['TEAM'].unique()
 
+# Specify the column to count occurrences of
+target_column = 'Odds'
+
+# Create a new column to store counts
+df['counts'] = df[target_column].apply(lambda x: df[target_column].value_counts()[x])
+
+df['rank'] = df.groupby('Odds')['TEAM'].rank(method='dense')
+
+df['rank_value'] = df['rank']-1
 
 # Create the plot
 plt.figure(figsize=(5,10))
@@ -40,11 +49,18 @@ for team in teams:
 
     # Get the corresponding logo from the TEAM NAME AND ASSUME THE NAME OF THE .PNG FILE IS THE NAME OF THE TEAM
     team_logo = team_data['TEAM'].iloc[0]  # Assuming the logo name is consistent for each team
-    logo_path = os.path.join(logo_folder, f'{team_logo}.png')
-    
+    logo_path = os.path.join(logo_folder, f'{team_logo}.png')    
 
     if os.path.exists(logo_path):
-        for (x, y) in zip(team_data['Week'], team_data['Odds']):
+        for (x, y, rank) in zip(team_data['Week'], team_data['Odds'], team_data['rank_value']):
+            print(x)
+            print(rank)
+            print(rank % 2)
+            if rank > 0:
+                #if rank % 2 == 0:
+                #    x = x + ((rank-1) * (offset_increment * -1))
+                #else:
+                x = x + (rank * (offset_increment))
             img = mpimg.imread(logo_path)
             imagebox = OffsetImage(img, zoom=0.1)  # Adjust zoom to control the size of logos
             ab = AnnotationBbox(imagebox, (x, y), frameon=False)
