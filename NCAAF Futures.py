@@ -4,8 +4,6 @@ import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import os
 from datetime import datetime
-import numpy as np
-
 # Load the Excel file
 file_path = 'NCAAFutures.xlsx'# Replace with your actual file path
 df = pd.read_excel(file_path)
@@ -23,22 +21,17 @@ df['Color'] = df['Color'].str.strip().str.upper()
 # Group the data by team
 teams = df['TEAM'].unique()
 
-# Specify the column to count occurrences of
-target_column = 'Odds'
-
-# Create a new column to store counts
-df['counts'] = df[target_column].apply(lambda x: df[target_column].value_counts()[x])
-
+#Add Ranks to offset logos when same odds for multiple teams later on
 df['rank'] = df.groupby('Odds')['TEAM'].rank(method='dense')
 
 df['rank_value'] = df['rank']-1
 
 # Create the plot
-plt.figure(figsize=(5,10))
+plt.figure(figsize=(5,20))
  
 # Define the path to the logos folder
 logo_folder = 'NCAAF Logos'# Replace with your actual logos folder path# Plot each team's odds over the weeks and add logos
-offset_increment = .005# Adjust as needed# Track the last position used to detect overlaps
+offset_increment = .02# Adjust as needed# Track the last position used to detect overlaps
 last_positions = {}
 
 for team in teams:
@@ -53,9 +46,6 @@ for team in teams:
 
     if os.path.exists(logo_path):
         for (x, y, rank) in zip(team_data['Week'], team_data['Odds'], team_data['rank_value']):
-            print(x)
-            print(rank)
-            print(rank % 2)
             if rank > 0:
                 #if rank % 2 == 0:
                 #    x = x + ((rank-1) * (offset_increment * -1))
@@ -71,9 +61,9 @@ for team in teams:
 # Add labels and title
 plt.xlabel('Week')
 plt.ylabel('Odds')
-plt.title('NCAA Futures 2024: Week 1')
+plt.title('NCAA Futures 2024: Week 2')
 #plt.legend(title='Teams', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.ylim(0,5100)
+#plt.ylim(0,8100)
 
 # Set x-axis to show only the numbers we have
 plt.xticks([1])
@@ -81,7 +71,7 @@ plt.xticks([1])
 # Save the plot with date and time in the filename
 timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 plt.tight_layout()
-plt.savefig(f'NCAA_Futures_Odds_{timestamp}.png', dpi=300)
+plt.savefig(f'NCAA_Futures_Odds{timestamp}.png', dpi=300)
 
 # Show the plot
 plt.tight_layout()
