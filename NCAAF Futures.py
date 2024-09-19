@@ -31,7 +31,7 @@ plt.figure(figsize=(5,20))
  
 # Define the path to the logos folder
 logo_folder = 'NCAAF Logos'# Replace with your actual logos folder path# Plot each team's odds over the weeks and add logos
-offset_increment = .02# Adjust as needed# Track the last position used to detect overlaps
+offset_increment = .03# Adjust as needed# Track the last position used to detect overlaps
 last_positions = {}
 
 for team in teams:
@@ -61,12 +61,12 @@ for team in teams:
 # Add labels and title
 plt.xlabel('Week')
 plt.ylabel('Odds')
-plt.title('NCAA Futures 2024: Week 2')
+plt.title('NCAA Futures 2024: Week 4')
 #plt.legend(title='Teams', bbox_to_anchor=(1.05, 1), loc='upper left')
 #plt.ylim(0,8100)
 
 # Set x-axis to show only the numbers we have
-plt.xticks([1])
+plt.xticks([1,2,3,4])
 
 # Save the plot with date and time in the filename
 timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
